@@ -22,7 +22,6 @@ def knnRegressorTrain(test, target, save=True, cv=True):
         predicted = cross_val_predict(knn, test, target, cv=10)
         print knn.score(test, target)
 
-    if plot == True:
         print "Plotting."
         fig, ax = plt.subplots()
         ax.scatter(y, predicted, edgecolors=(0, 0, 0))
@@ -68,7 +67,7 @@ def cross_val(X, y, plot=True):
         plt.show()
 
 def loadModel():
-    with open('knnModel.pickle', 'rb') as handle:
+    with open('naiveModel.pickle', 'rb') as handle:
         regr = pickle.load(handle)
     return regr
 

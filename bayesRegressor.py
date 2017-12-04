@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def naiveRegressorTrain(test, target, save=True, cv=True):
-    print "Beginning to train the Nayve Bayes Model."
+    print "Beginning to train the Naive Bayes Model."
     if save == False:
         with open('naiveModel.pickle', 'rb') as handle:
             model = pickle.load(handle)
@@ -14,9 +14,8 @@ def naiveRegressorTrain(test, target, save=True, cv=True):
         print model.score(test, target)
     else:
         print "Saving the model."
-        model = linear_model.BayesianRidge()
-        bayes = model.fit(test.todense(), target)
-        return
+        model = linear_model.BayesianRidge(n_iter=50)
+        bayes = model.fit(test.toarray(), target)
         with open('naiveModel.pickle', 'wb') as handle:
             pickle.dump(bayes, handle, protocol=pickle.HIGHEST_PROTOCOL) 
     if cv == True:
@@ -24,7 +23,6 @@ def naiveRegressorTrain(test, target, save=True, cv=True):
         predicted = cross_val_predict(bayes, test, target, cv=10)
         print bayes.score(test, target)
 
-    if plot == True:
         print "Plotting."
         fig, ax = plt.subplots()
         ax.scatter(y, predicted, edgecolors=(0, 0, 0))
@@ -37,11 +35,9 @@ def naive_predict(X, plot=True):
     print "Loading Naive Bayes Model."
     regr = loadModel()
 
-    predicted = []
 
     print "Running prediction."
-    for i in range(X.shape[0]):
-        predicted.append(regr.predict(X.getrow(i)[0]))
+    predicted = regr.predict(X)
 
     if plot==True:
         print "Plotting."

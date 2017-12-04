@@ -23,10 +23,9 @@ def linRegressorTrain(test, target, save=True, cv=True):
         predicted = cross_val_predict(linReg, test, target, cv=10)
         print linReg.score(test, target)
 
-    if plot == True:
         print "Plotting."
         fig, ax = plt.subplots()
-        ax.scatter(y, predicted, edgecolors=(0, 0, 0))
+        ax.scatter(target, predicted, edgecolors=(0, 0, 0))
         ax.plot([min(target), max(target)], [min(target), max(target)], 'k--', lw=4)
         ax.set_xlabel('Measured')
         ax.set_ylabel('Predicted')

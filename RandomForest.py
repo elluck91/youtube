@@ -6,7 +6,7 @@ import pickle
 def randForestTrain(X, y, save=True, cv=True):
     print "Beginning to train the Random Forest Model."
     if save == True:
-        regr = RandomForestRegressor(random_state=0)
+        regr = RandomForestRegressor(random_state=0, max_features="sqrt")
         regr.fit(X, y)
         print "Saving the model."
         with open('randomForest.pickle', 'wb') as handle:

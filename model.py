@@ -52,8 +52,6 @@ def plotResults(predicted, measured):
     plt.show()
 
 # main
-is_training = True
-
 input_path = sys.argv[1]
 print "Hi there!\nWe will process the following file:"
 print input_path
@@ -61,11 +59,12 @@ print input_path
 options = ("\nPlease select model to use:\n" 
         + "1. Linear Regression\n"
         + "2. Random Forest\n"
-        + "3. Naive Bayes\n"
+        + "3. Naive Bayes - very time inefficient\n"
         + "4. K Nearest Neighbors\n"
         + "\nEnter number: ")
 chosen_model  = input(options)
-
+is_training = input("Are you training models or predicting?\n"
+        + "1 for training\n2 for predicting\n")
 X = load_npz(input_path).tocsr()
 print "Extracting features and normalizing data."
 csr_l2normalize(X)
@@ -77,19 +76,24 @@ for line in file:
     y.append(int(line.replace("\n", '')))
 file.close()
 
-if is_training:
+if chosen_model == 1:
+    train, selected_features  = selectFeatures(X, y, 20)
+elif chosen_model == 2:
+    train, selected_features  = selectFeatures(X, y, 15)
+elif chosen_model == 3:
+    train, selected_features  = selectFeatures(X, y, 1)
+elif chosen_model == 4:
+    train, selected_features  = selectFeatures(X, y, 30)
+
+if is_training == 1:
     if chosen_model == 1:
-        train, selected_features  = selectFeatures(X, y, 20)
-        linRegressorTrain(train, y)
+        linRegressorTrain(train, y, save=True, cv=False)
     elif chosen_model == 2:
-        train, selected_features  = selectFeatures(X, y, 15)
-        randForestTrain(train, y)
+        randForestTrain(train, y, save=True, cv=True)
     elif chosen_model == 3:
-        train, selected_features  = selectFeatures(X, y, 1)
-        naiveRegressorTrain(train, y)
+        naiveRegressorTrain(train, y, save=True, cv=False)
     elif chosen_model == 4:
-        train, selected_features  = selectFeatures(X, y, 30)
-        knnRegressorTrain(train, y)
+        knnRegressorTrain(train, y, save=True, cv=False)
     print "Done."
 else:
     random_test = csr_matrix((0, train.shape[1]))
